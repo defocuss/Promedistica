@@ -4,7 +4,7 @@ import time
 
 #                    #
 # Agregar las clases #
-#                   
+#                    #
 
 
 def menu():
@@ -107,7 +107,7 @@ def agregar_ramo(filename='notas.json'):
         print("---------- Ramo agregado ----------")
         for i in range(0,2):
             print(" ")
-# Ver el agregar la funcion de notas no convencinales (como las notas de ecodiseño)
+# Ver el agregar la funcion de notas no convencinales (como las notas de ecodiseño) / intentar acotar
 
 def eliminar_ramo(filename='notas.json'):
     data = leer_json(filename)
@@ -170,7 +170,7 @@ def imprimir_todas_notas(filename='notas.json'):
                 print(f'Promedio: {promedio_redondeado} / Nota n: {round(estado, 2)}')
                 break
         print(dash)
-# Arreglar para meter cada cosa en una funcion
+# Arreglar para meter cada cosa en una funcion / intentar acotar
 
 def ver_notas_ramo(filename='notas.json'):
     data = leer_json(filename)
@@ -232,7 +232,7 @@ def modificar_ramo(filename='notas.json'):
             print("Índice de prueba no válido.")
     else:
         print("El ramo no existe.")
-# Revisar por el promedio del ramo
+# Revisar por el promedio del ramo / intentar acotar
 
 def exportar_a_csv(filename='notas.json'):
     import csv
@@ -245,7 +245,7 @@ def exportar_a_csv(filename='notas.json'):
             for evaluacion in notas:
                 writer.writerow([ramo, evaluacion['prueba'], evaluacion['nota'], evaluacion['ponderacion']])
     print(f"Datos exportados a {csv_filename}")
-# Arreglar la imprecion en el csv
+# Arreglar la impresion en el csv
 
 def calcular_promedio_ramo(filename= 'notas.json'):
     data = leer_json(filename)
@@ -272,6 +272,6 @@ def calcular_promedio_ramo(filename= 'notas.json'):
             print("No hay ponderaciones válidas para calcular el promedio.")
     else:
         print("El ramo no existe.")
-# Agregar esta funcion para mostrar solo las notas de un ramo en especifico
+# Agregar esta funcion para mostrar solo las notas de un ramo en especifico / momentaneamente no funciona
 
 menu() 
