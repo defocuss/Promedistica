@@ -111,7 +111,8 @@ def agregar_ramo(filename='notas.json'):
         #     evaluacion = {"tipo": "control", "nombre": f"Control {y + 1}", "nota": nota, "ponderacion": ponderacion, "promedio": promedio}
         #     data[ramo].append(evaluacion)
         
-        # todo lo comentado lo voy a pasar a una funcion, por lo de las buenas practicas
+        # todo lo comentado lo voy a pasar a una funcion, por lo de las buenas practicas / voy a eliminar el
+        # el promedio como jey para que tenga mas orden, solo se calculara cuando sea necesario
 
         suma_promedios = 0
         for evaluacion in data[ramo]:
