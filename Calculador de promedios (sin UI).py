@@ -81,36 +81,38 @@ def agregar_ramo(filename='notas.json'):
                 variable = False
             except ValueError:
                 pruebas = input("Agregue una cantidad válida: ")
-        for x in range(pruebas):
-            print(f"\nAgregar prueba {x + 1}:")
-            nota = input("Dime la nota de esta prueba: ")
-            variable = True
-            while variable:
-                try:
-                    nota = float(nota)
-                    variable = False
-                except ValueError:
-                    nota = input("Agregue una nota valida: ")
-            ponderacion = input("Dime cuanto es la ponderacion de esta prueba: ")
-            variable = True
-            while variable:
-                try:
-                    ponderacion = float(ponderacion)
-                    variable = False
-                except ValueError:
-                    ponderacion = input("Agregue una ponderacion valida valida: ")
-            promedio = nota * ponderacion
-            evaluacion = {"tipo": "prueba", "nombre": f"Prueba {x + 1}", "nota": nota, "ponderacion": ponderacion, "promedio": promedio}
-            data[ramo].append(evaluacion)
-        controles = int(input("Dime cuantos controles tienes: "))
-        for y in range(controles):
-            print(f"\nAgregar control {y + 1}:")
-            nota = float(input("Dime la nota de este control: "))
-            ponderacion = float(input("Dime cuanto es la ponderacion de este control: "))
-            promedio = nota * ponderacion
-            evaluacion = {"tipo": "control", "nombre": f"Control {y + 1}", "nota": nota, "ponderacion": ponderacion, "promedio": promedio}
-            data[ramo].append(evaluacion)
+        # for x in range(pruebas):
+        #     print(f"\nAgregar prueba {x + 1}:")
+        #     nota = input("Dime la nota de esta prueba: ")
+        #     variable = True
+        #     while variable:
+        #         try:
+        #             nota = float(nota)
+        #             variable = False
+        #         except ValueError:
+        #             nota = input("Agregue una nota valida: ")
+        #     ponderacion = input("Dime cuanto es la ponderacion de esta prueba: ")
+        #     variable = True
+        #     while variable:
+        #         try:
+        #             ponderacion = float(ponderacion)
+        #             variable = False
+        #         except ValueError:
+        #             ponderacion = input("Agregue una ponderacion valida valida: ")
+        #     promedio = nota * ponderacion
+        #     evaluacion = {"tipo": "prueba", "nombre": f"Prueba {x + 1}", "nota": nota, "ponderacion": ponderacion, "promedio": promedio}
+        #     data[ramo].append(evaluacion)
+        # controles = int(input("Dime cuantos controles tienes: "))
+        # for y in range(controles):
+        #     print(f"\nAgregar control {y + 1}:")
+        #     nota = float(input("Dime la nota de este control: "))
+        #     ponderacion = float(input("Dime cuanto es la ponderacion de este control: "))
+        #     promedio = nota * ponderacion
+        #     evaluacion = {"tipo": "control", "nombre": f"Control {y + 1}", "nota": nota, "ponderacion": ponderacion, "promedio": promedio}
+        #     data[ramo].append(evaluacion)
         
+        # todo lo comentado lo voy a pasar a una funcion, por lo de las buenas practicas
+
         suma_promedios = 0
         for evaluacion in data[ramo]:
             promedio_ramo =  evaluacion['promedio']
