@@ -72,22 +72,24 @@ def agregar_ramo(filename='notas.json'):
     else:
         data[ramo] = []
         pruebas = int(input("Dime cuantas pruebas tienes: "))
-        for x in range(pruebas):
-            print(f"\nAgregar prueba {x + 1}:")
-            nota = float(input("Dime la nota de esta prueba: "))
-            ponderacion = float(input("Dime cuanto es la ponderacion de esta prueba: "))
-            promedio = nota * ponderacion
-            evaluacion = {"tipo": "prueba", "nombre": f"Prueba {x + 1}", "nota": nota, "ponderacion": ponderacion, "promedio": promedio}
-            data[ramo].append(evaluacion)
-        controles = int(input("Dime cuantos controles tienes: "))
-        for y in range(controles):
-            print(f"\nAgregar control {y + 1}:")
-            nota = float(input("Dime la nota de este control: "))
-            ponderacion = float(input("Dime cuanto es la ponderacion de este control: "))
-            promedio = nota * ponderacion
-            evaluacion = {"tipo": "control", "nombre": f"Control {y + 1}", "nota": nota, "ponderacion": ponderacion, "promedio": promedio}
-            data[ramo].append(evaluacion)
+        # for x in range(pruebas):
+        #     print(f"\nAgregar prueba {x + 1}:")
+        #     nota = float(input("Dime la nota de esta prueba: "))
+        #     ponderacion = float(input("Dime cuanto es la ponderacion de esta prueba: "))
+        #     promedio = nota * ponderacion
+        #     evaluacion = {"tipo": "prueba", "nombre": f"Prueba {x + 1}", "nota": nota, "ponderacion": ponderacion, "promedio": promedio}
+        #     data[ramo].append(evaluacion)
+        # controles = int(input("Dime cuantos controles tienes: "))
+        # for y in range(controles):
+        #     print(f"\nAgregar control {y + 1}:")
+        #     nota = float(input("Dime la nota de este control: "))
+        #     ponderacion = float(input("Dime cuanto es la ponderacion de este control: "))
+        #     promedio = nota * ponderacion
+        #     evaluacion = {"tipo": "control", "nombre": f"Control {y + 1}", "nota": nota, "ponderacion": ponderacion, "promedio": promedio}
+        #     data[ramo].append(evaluacion)
         
+        # puedo poner cada una de esas funciones en 
+
         suma_promedios = 0
         for evaluacion in data[ramo]:
             promedio_ramo =  evaluacion['promedio']
