@@ -39,10 +39,12 @@ def menu():
 def leer_opcion_menu():
     while True:
         opcion = input("Seleccione una opción: ")
-        if int(opcion) >= 1 and int(opcion) <=7:
-            return opcion
-        else:
-            print("Opción no válida, por favor seleccione una opción del menú.")
+        try:
+            if int(opcion) >= 1 and int(opcion) <=7:
+                return opcion
+        except ValueError:
+            pass
+        print("Por favor seleccione una opcion válida!")
 
 def crear_json_notas(data, filename='notas.json'):
     with open(filename, 'w') as file:
@@ -71,11 +73,32 @@ def agregar_ramo(filename='notas.json'):
             print(" ")
     else:
         data[ramo] = []
-        pruebas = int(input("Dime cuantas pruebas tienes: "))
+        pruebas = input("Dime cuantas pruebas tienes: ")
+        variable = True
+        while variable:
+            try:
+                pruebas = int(pruebas)
+                variable = False
+            except ValueError:
+                pruebas = input("Agregue una cantidad válida: ")
         for x in range(pruebas):
             print(f"\nAgregar prueba {x + 1}:")
-            nota = float(input("Dime la nota de esta prueba: "))
-            ponderacion = float(input("Dime cuanto es la ponderacion de esta prueba: "))
+            nota = input("Dime la nota de esta prueba: ")
+            variable = True
+            while variable:
+                try:
+                    nota = float(nota)
+                    variable = False
+                except ValueError:
+                    nota = input("Agregue una nota valida: ")
+            ponderacion = input("Dime cuanto es la ponderacion de esta prueba: ")
+            variable = True
+            while variable:
+                try:
+                    ponderacion = float(ponderacion)
+                    variable = False
+                except ValueError:
+                    ponderacion = input("Agregue una ponderacion valida valida: ")
             promedio = nota * ponderacion
             evaluacion = {"tipo": "prueba", "nombre": f"Prueba {x + 1}", "nota": nota, "ponderacion": ponderacion, "promedio": promedio}
             data[ramo].append(evaluacion)
