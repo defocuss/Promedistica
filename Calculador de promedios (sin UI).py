@@ -131,35 +131,18 @@ def imprimir_todas_notas(filename='notas.json'):
     print(dash)
     for ramo, notas in data.items():
         print(f"Ramo: {ramo.capitalize()}")
-        numero_de_evaluaciones = len(data[ramo])
-        contador = 1
-        ponderado_necesario = 0
+        suma_ponderaciones_sin_nota = 0
         for evaluacion in notas:
-            if contador < numero_de_evaluaciones:
-                contador +=1
-                if (evaluacion['nota'] == 0):
-                    nombre = evaluacion["nombre"]
-                    nota = evaluacion["nota"]
-                    ponderacion = evaluacion['ponderacion']
-                    ponderado_necesario = ponderado_necesario + ponderacion
-                    print(f"{nombre} - Nota: {nota}, Ponderación: {ponderacion}")
-                elif (evaluacion['nota'] != 0):
-                    nombre = evaluacion["nombre"]
-                    nota = evaluacion["nota"]
-                    ponderacion = evaluacion['ponderacion']
-                    print(f"{nombre} - Nota: {nota}, Ponderación: {ponderacion}")
-            elif contador == numero_de_evaluaciones:
-                promedio_ramo = evaluacion['promedio_ramo']
-                promedio_redondeado = round(promedio_ramo, 2)
-                if promedio_redondeado >= 3.96:
-                    estado = 'YA PASASTE EL RAMO!!!'
-                else:
-                    estado = (3.96 - promedio_ramo) / ponderado_necesario
-                print(' ')
-                print(f'Promedio: {promedio_redondeado} / Nota n: {round(estado, 2)}')
-                break
+            if (evaluacion['nota'] == 0):
+                print(f"{evaluacion['nombre']} - Nota: {evaluacion['nota']}, Ponderación: {evaluacion['ponderacion']}")
+                suma_ponderaciones_sin_nota = suma_ponderaciones_sin_nota + evaluacion['ponderacion']
+            elif (evaluacion['nota'] != 0):
+                print(f"{evaluacion['nombre']} - Nota: {evaluacion['nota']}, Ponderación: {evaluacion['ponderacion']}")
+        print(' ')
+        print (f'Promedio actual: {promedio_actual_ramo(data,ramo)} / Nota necesaria: {calculo_de_nota_necesaria(data, ramo, suma_ponderaciones_sin_nota)}')        
+        
         print(dash)
-# Arreglar para meter cada cosa en una funcion / intentar acotar
+# Arreglar para meter cada cosa en una funcion / Lo acote lo maximo que pude, preguntarle al profe si esta bien
 
 def ver_notas_ramo(filename='notas.json'):
     data = leer_json(filename)
@@ -300,7 +283,9 @@ def promedio_actual_ramo(data,ramo):
     for evaluacion in data[ramo]:
         promedio_ramo =  evaluacion['promedio']
         suma_promedios += promedio_ramo
-    suma_promedios = {"promedio_ramo": suma_promedios}
-    data[ramo].append(suma_promedios)
+    return round(suma_promedios, 2)
+
+def calculo_de_nota_necesaria(data, ramo, suma_ponderaciones_sin_nota):
+    return round((3.96 - (promedio_actual_ramo(data,ramo)))/suma_ponderaciones_sin_nota, 2)
 
 menu()
