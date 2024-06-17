@@ -25,13 +25,13 @@ def menu():
         if opcion == '1':
             agregar_ramo(filename='notas.json')
         elif opcion == '2':
-            ver_notas_ramo(filename= 'notas.json')
+            ver_notas_ramo_especifico(filename= 'notas.json')
         elif opcion == '3':
             modificar_ramo(filename='notas.json')
         elif opcion == '4':
             eliminar_ramo(filename='notas.json')
         elif opcion == '5':
-            imprimir_todas_notas(filename='notas.json')
+            ver_todas_notas(filename='notas.json')
         elif opcion == '6':
             exportar_a_csv(filename='notas.json')
         elif opcion == '7':
@@ -125,7 +125,7 @@ def eliminar_ramo(filename='notas.json'):
         print(" ")
 ## Este deberia estar correcto y que en si no es un codigo muy largo aparte de los prints
 
-def imprimir_todas_notas(filename='notas.json'):
+def ver_todas_notas(filename='notas.json'):
     data = leer_json(filename)
     dash = '-' * 40
     print(dash)
@@ -144,7 +144,7 @@ def imprimir_todas_notas(filename='notas.json'):
         print(dash)
 ## Lo acote lo maximo que pude, preguntarle al profe si esta bien
 
-def ver_notas_ramo(filename='notas.json'):
+def ver_notas_ramo_especifico(filename='notas.json'):
     data = leer_json(filename)
     
     ramo = input("Dime el ramo del que quieres ver las notas: ")
