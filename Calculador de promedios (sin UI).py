@@ -1,10 +1,12 @@
 import json
 import time
-
+import csv
 
 #                    #
 # Agregar las clases #
 #                    #
+
+#lo que tiene 2 ## es que creo que esta listo
 
 
 def menu():
@@ -123,7 +125,7 @@ def eliminar_ramo(filename='notas.json'):
         print("El ramo no existe.")
         print(" ")
         print(" ")
-# Este deberia estar correcto y que en si no es un codigo muy largo aparte de los prints
+## Este deberia estar correcto y que en si no es un codigo muy largo aparte de los prints
 
 def imprimir_todas_notas(filename='notas.json'):
     data = leer_json(filename)
@@ -142,7 +144,7 @@ def imprimir_todas_notas(filename='notas.json'):
         print (f'Promedio actual: {promedio_actual_ramo(data,ramo)} / Nota necesaria: {calculo_de_nota_necesaria(data, ramo, suma_ponderaciones_sin_nota)}')        
         
         print(dash)
-# Arreglar para meter cada cosa en una funcion / Lo acote lo maximo que pude, preguntarle al profe si esta bien
+## Lo acote lo maximo que pude, preguntarle al profe si esta bien
 
 def ver_notas_ramo(filename='notas.json'):
     data = leer_json(filename)
@@ -204,20 +206,20 @@ def modificar_ramo(filename='notas.json'):
             print("Índice de prueba no válido.")
     else:
         print("El ramo no existe.")
-# Revisar por el promedio del ramo / intentar acotar
+# Arreglar
 
 def exportar_a_csv(filename='notas.json'):
-    import csv
     data = leer_json(filename)
     csv_filename = 'notas.csv'
     with open(csv_filename, mode='w', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow(["Ramo", "Prueba", "Nota", "Ponderación"])
+        writer.writerow(["Ramo", "Prueba", "Nota", "Ponderacion"])
         for ramo, notas in data.items():
             for evaluacion in notas:
-                writer.writerow([ramo, evaluacion['prueba'], evaluacion['nota'], evaluacion['ponderacion']])
+                writer.writerow([ramo, evaluacion['nombre'], evaluacion['nota'], evaluacion['ponderacion']])
+            writer.writerow([ ])
     print(f"Datos exportados a {csv_filename}")
-# Arreglar la impresion en el csv
+# Creo que esto esta listo
 
 def calcular_promedio_ramo(filename= 'notas.json'):
     data = leer_json(filename)
@@ -286,6 +288,8 @@ def promedio_actual_ramo(data,ramo):
     return round(suma_promedios, 2)
 
 def calculo_de_nota_necesaria(data, ramo, suma_ponderaciones_sin_nota):
+    if suma_ponderaciones_sin_nota == 0:
+        return 'YA PASASTE EL RAMOOOO!!!'
     return round((3.96 - (promedio_actual_ramo(data,ramo)))/suma_ponderaciones_sin_nota, 2)
 
 menu()
