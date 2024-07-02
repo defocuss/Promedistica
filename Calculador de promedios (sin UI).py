@@ -2,7 +2,40 @@ import json
 import time
 import csv
 
-#                    #
+class Ramo:
+    def __init__(self, nombre):
+        self.nombre = nombre
+        self.evaluaciones = []
+
+    def agregar_evaluacion(self, evaluacion):
+        self.evaluaciones.append(evaluacion)
+
+    def ver_evaluaciones(self):
+        if not self.evaluaciones:
+            print(f"No hay ninguna evaluacion registrada en {self.nombre}")
+        else:
+            print(f"Evaluaciones en {self.nombre}")
+
+    def calcular_promedio(self):
+        promedio = 0
+        for evaluacion in self.evaluaciones:
+            promedio += evaluacion.nota * evaluacion.ponderacion
+
+        if promedio > 0:
+            return promedio
+        else:
+            return 0
+
+
+class Evaluacion:
+    def __init__(self, prueba, nota, ponderacion):
+        self.prueba = prueba
+        self.nota = 0
+        self.ponderacion = ponderacion
+
+    def __str__(self):
+        return f"Evaluacion : {self.prueba} - Nota : {self.nota} - Ponderacion : {self.ponderacion}"
+
 # Agregar las clases #
 #                    #
 
@@ -12,7 +45,7 @@ import csv
 def menu():
     while True:
         time.sleep(3)
-        print("Promedios de notas:")
+        print("\nPromedistica:")
         print("1. Agregar Ramo y Notas")
         print("2. Ver notas de un ramo")
         print("3. Modificar Ramo/Nota")
