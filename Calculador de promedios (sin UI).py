@@ -3,324 +3,246 @@ import time
 import csv
 
 class Ramo:
-    def __init__(self, nombre):
+    def __init__(self, nombre, evaluaciones):
         self.nombre = nombre
-        self.evaluaciones = []
-
-    def agregar_evaluacion(self, evaluacion):
-        self.evaluaciones.append(evaluacion)
-
-    def ver_evaluaciones(self):
-        if not self.evaluaciones:
-            print(f"No hay ninguna evaluacion registrada en {self.nombre}")
-        else:
-            print(f"Evaluaciones en {self.nombre}")
-
-    def calcular_promedio(self):
-        promedio = 0
-        for evaluacion in self.evaluaciones:
-            promedio += evaluacion.nota * evaluacion.ponderacion
-
-        if promedio > 0:
-            return promedio
-        else:
-            return 0
-
+        self.evaluaciones = evaluaciones
+            
+    def to_dict(self):
+        return {
+            'nombre': self.nombre,
+            'evaluaciones': [e.to_dict() for e in self.evaluaciones]
+        }
 
 class Evaluacion:
-    def __init__(self, prueba, nota, ponderacion):
-        self.prueba = prueba
-        self.nota = 0
+    def __init__(self, tipo, nota, ponderacion):
+        self.tipo = tipo
+        self.nota = nota
         self.ponderacion = ponderacion
-
-    def __str__(self):
-        return f"Evaluacion : {self.prueba} - Nota : {self.nota} - Ponderacion : {self.ponderacion}"
-
-# Agregar las clases #
-#                    #
-
-#lo que tiene 2 ## es que creo que esta listo
-
-
-def menu():
-    while True:
-        time.sleep(3)
-        print("\nPromedistica:")
-        print("1. Agregar Ramo y Notas")
-        print("2. Ver notas de un ramo")
-        print("3. Modificar Ramo/Nota")
-        print("4. Eliminar Ramo")
-        print("5. Ver notas")
-        print("6. Exportar a un CSV")
-        print("7. Salir")
-        print(" ")
-        opcion = leer_opcion_menu()
-        if opcion == '1':
-            agregar_ramo(filename='notas.json')
-        elif opcion == '2':
-            ver_notas_ramo_especifico(filename= 'notas.json')
-        elif opcion == '3':
-            modificar_ramo(filename='notas.json')
-        elif opcion == '4':
-            eliminar_ramo(filename='notas.json')
-        elif opcion == '5':
-            ver_todas_notas(filename='notas.json')
-        elif opcion == '6':
-            exportar_a_csv(filename='notas.json')
-        elif opcion == '7':
-            print("Programa Terminado :)")
-            break
-
-def leer_opcion_menu():
-    while True:
-        opcion = input("Seleccione una opción: ")
-        try:
-            if int(opcion) >= 1 and int(opcion) <=7:
-                return opcion
-        except ValueError:
-            pass
-        print("Por favor seleccione una opcion válida!")
-
-def crear_json_notas(data, filename='notas.json'):
-    with open(filename, 'w') as file:
-        json.dump(data, file, indent=6)
-
-def leer_json(filename='notas.json'):
-    try:
-        with open(filename, 'r') as file:
-            return json.load(file)
-    except FileNotFoundError:
-        return {}
-
-def agregar_ramo(filename='notas.json'):
-    data = leer_json(filename)
-    
-    ramo = input("Cual es el ramo?: ")
-    if ramo in data:
-        for i in range(0,3):
-            print(" ")
-        print("---------- Ramo existente ----------")
-        print(" ")
-        print("Este ramo ya existe. Intenta nuevamente con uno nuevo.")
-        print(" ")
-        print("---------- Ramo existente ----------")
-        for i in range(0,2):
-            print(" ")
-    else:
-        data[ramo] = []
-        pruebas = input("Dime cuantas pruebas tienes: ")
-        variable = True
-        while variable:
-            try:
-                pruebas = int(pruebas)
-                variable = False
-            except ValueError:
-                pruebas = input("Agregue una cantidad válida: ")
-        agregar_prueba(pruebas,ramo,data)
-        controles = int(input("Dime cuantos controles tienes: "))
-        agregar_controles(controles,ramo,data)
-
-        crear_json_notas(data, filename)
-        for i in range(0,3):
-            print(" ")
-        print("---------- Ramo agregado ----------")
-        print(" ")
-        print(f"{ramo.capitalize()} ha sido agregado.")
-        print(" ")
-        print("---------- Ramo agregado ----------")
-        for i in range(0,2):
-            print(" ")
-# Ver el agregar la funcion de notas no convencinales (como las notas de ecodiseño) / lo separe en funciones
-
-def eliminar_ramo(filename='notas.json'):
-    data = leer_json(filename)
-    ramo = input("Dime que ramo quieres eliminar: ")
-    if ramo in data:
-        del data[ramo]
-        crear_json_notas(data, filename)
-        print(" ")
-        print(" ")
-        print(" ")
-        print(" ")
-        print("---------- Ramo eliminado ----------")
-        print(" ")
-        print(f"{ramo.capitalize()} ha sido eliminado.")
-        print(" ")
-        print("---------- Ramo eliminado ----------")
-        print(" ")
-        print(" ")
-        print(" ")
-    else:
-        print(" ")
-        print(" ")
-        print("El ramo no existe.")
-        print(" ")
-        print(" ")
-## Este deberia estar correcto y que en si no es un codigo muy largo aparte de los prints
-
-def ver_todas_notas(filename='notas.json'):
-    data = leer_json(filename)
-    dash = '-' * 40
-    print(dash)
-    for ramo, notas in data.items():
-        print(f"Ramo: {ramo.capitalize()}")
-        suma_ponderaciones_sin_nota = 0
-        for evaluacion in notas:
-            if (evaluacion['nota'] == 0):
-                print(f"{evaluacion['nombre']} - Nota: {evaluacion['nota']}, Ponderación: {evaluacion['ponderacion']}")
-                suma_ponderaciones_sin_nota = suma_ponderaciones_sin_nota + evaluacion['ponderacion']
-            elif (evaluacion['nota'] != 0):
-                print(f"{evaluacion['nombre']} - Nota: {evaluacion['nota']}, Ponderación: {evaluacion['ponderacion']}")
-        print(' ')
-        print (f'Promedio actual: {promedio_actual_ramo(data,ramo)} / Nota necesaria: {calculo_de_nota_necesaria(data, ramo, suma_ponderaciones_sin_nota)}')        
         
-        print(dash)
-## Lo acote lo maximo que pude, preguntarle al profe si esta bien
-
-def ver_notas_ramo_especifico(filename='notas.json'):
-    data = leer_json(filename)
+    def to_dict(self):
+        return {
+            'tipo': self.tipo,
+            'nota': self.nota,
+            'ponderacion': self.ponderacion
+        }
     
-    ramo = input("Dime el ramo del que quieres ver las notas: ")
-    if ramo in data:
-        dash = '-' * 40
-        print(dash)
-        print(f"Notas de {ramo}:")
-        numero_de_evaluaciones = len(data[ramo])
-        contador = 1
-        ponderado_necesario = 0
-        for evaluacion in ramo:
-            if contador < numero_de_evaluaciones:
-                    print(f"  {evaluacion['nombre']} - Nota: {evaluacion['nota']}, Ponderación: {evaluacion['ponderacion']}")
-                    contador += 1   
-            elif contador == numero_de_evaluaciones:
-                print(" ")
-                print(f"Promedio: {evaluacion['promedio_ramo']}")
-        print(dash)
-    else:
-        print("El ramo no existe.")
-# Aqui debo arreglarlo
-
-def modificar_ramo(filename='notas.json'):
-    data = leer_json(filename)
-    ramo = input("Dime el ramo que quieres modificar: ")
-    if ramo in data:
-        numero_de_evaluaciones = len(data[ramo])
-        alala = 1
-        dash = '-' * 40
-        print(dash)
-        print(f"Notas actuales del ramo {ramo}:")
-        print(" ")
-        for idx, evaluacion in enumerate(data[ramo]):
-            if alala < numero_de_evaluaciones:
-                alala += 1
-                print(f"{idx + 1}. {evaluacion['nombre']} - Nota: {evaluacion['nota']}, Ponderación: {evaluacion['ponderacion']}")
-            elif alala == numero_de_evaluaciones:
+class Menu:
+    @staticmethod
+    def menu():
+        while True:
+            time.sleep(3)
+            print("\nPromedistica:")
+            print("1. Agregar Ramo y Notas")
+            print("2. Ver notas de un ramo")
+            print("3. Modificar Ramo/Nota")
+            print("4. Eliminar Ramo")
+            print("5. Ver notas")
+            print("6. Exportar a un CSV")
+            print("7. Salir")
+            print(" ")
+            opcion = Menu.leer_opcion_menu()
+            gestor_evaluaciones = Gestor_Evaluaciones()
+            if opcion == '1':
+                gestor_evaluaciones.agregar_ramo()
+            elif opcion == '2':
+                gestor_evaluaciones.ver_notas_especifico()
+            elif opcion == '3':
+                gestor_evaluaciones.modificar_ramo()
+            elif opcion == '4':
+                gestor_evaluaciones.eliminar_ramo()
+            elif opcion == '5':
+                gestor_evaluaciones.imprimir_datos()
+            elif opcion == '6':
+                gestor_evaluaciones.exportar_a_csv()
+            elif opcion == '7':
+                print("Programa Terminado :)")
                 break
-        print(dash)
-        print(" ")
-        prueba_idx = int(input("Dime el número de la evaluacion que quieres modificar: ")) - 1
-        if 0 <= prueba_idx < (len(data[ramo]) - 1):
-            print(" ")
-            nueva_nota = float(input("Dime la nueva nota: "))
-            print(" ")
-            nueva_ponderacion = float(input("Dime la nueva ponderación: "))
-            data[ramo][prueba_idx] = {"tipo": data[ramo][prueba_idx]['tipo'], "nombre": data[ramo][prueba_idx]['nombre'], "nota": nueva_nota, "ponderacion": nueva_ponderacion}
-            crear_json_notas(data, filename)
-            print(" ")
-            print(dash)
-            print(" ")
-            print(f"Evaluacion {prueba_idx + 1} de {ramo.capitalize()} ha sido modificada.")
-            print(" ")
-            print(dash)
-            print(" ")
-        else:
-            print("Índice de prueba no válido.")
-    else:
-        print("El ramo no existe.")
-# Arreglar
+    
+    @staticmethod
+    def leer_opcion_menu():
+        while True:
+            opcion = input("Seleccione una opción: ")
+            try:
+                if int(opcion) >= 1 and int(opcion) <=7:
+                    return opcion
+            except ValueError:
+                pass
+            print("Por favor seleccione una opcion válida!")
+            
+class Gestor_Archivo:
+    @staticmethod
+    def guardar_datos(ramos, filename='notas.json'):
+        with open(filename, 'w') as file:
+            json.dump([r.to_dict() for r in ramos], file, indent=4)
 
-def exportar_a_csv(filename='notas.json'):
-    data = leer_json(filename)
-    csv_filename = 'notas.csv'
-    with open(csv_filename, mode='w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(["Ramo", "Prueba", "Nota", "Ponderacion"])
-        for ramo, notas in data.items():
-            for evaluacion in notas:
-                writer.writerow([ramo, evaluacion['nombre'], evaluacion['nota'], evaluacion['ponderacion']])
-            writer.writerow([ ])
-    print(f"Datos exportados a {csv_filename}")
-# Creo que esto esta listo
-
-def calcular_promedio_ramo(filename= 'notas.json'):
-    data = leer_json(filename)
- 
-    ramo = input("Dime el ramo al que le quieres calcular el promedio: ")
-    if ramo in data:
-        suma_ponderada = 0
-        suma_ponderaciones = 0
+    @staticmethod
+    def cargar_datos(filename='notas.json'):
+        try:
+            with open(filename, 'r') as file:
+                try:
+                    ramos_data = json.load(file)
+                    if not ramos_data:
+                        return []
+                except json.JSONDecodeError:
+                    return []
+                
+                ramos = []
+                for data in ramos_data:
+                    nombre = data['nombre']
+                    evaluaciones_data = data['evaluaciones']
+                    evaluaciones = [Evaluacion(e['tipo'], e['nota'], e['ponderacion']) for e in evaluaciones_data]
+                    ramo = Ramo(nombre, evaluaciones)
+                    ramos.append(ramo)
+                return ramos
+        except FileNotFoundError:
+            return []
         
-        for evaluacion in data[ramo]:
-            nota = float(evaluacion['nota'])
-            ponderacion = float(evaluacion['ponderacion'])
-            suma_ponderada += nota * ponderacion
-            suma_ponderaciones += ponderacion
-        if suma_ponderaciones != 0:
-            promedio = suma_ponderada / suma_ponderaciones
-            dash = '-' * 40
+class Gestor_Evaluaciones:
+    def __init__(self):
+        self.ramos = Gestor_Archivo.cargar_datos()
+    
+    def ramo_existe(self, nombre_ramo):
+        for ramo in self.ramos:
+            if ramo.nombre == nombre_ramo:
+                return True
+            
+        return False 
+    
+    def agregar_evaluacion(self, n_evaluaciones, tipo):
+        lista_evaluaciones = []
+        for x in range(n_evaluaciones):
+                print(f"\nAgregar {tipo} {x + 1}:")
+                nota = input(f"Dime la nota de este/a {tipo}: ")
+                variable = True
+                while variable:
+                    try:
+                        nota = float(nota)
+                        variable = False
+                    except ValueError:
+                        nota = input("Agregue una nota valida: ")
+                ponderacion = input(f"Dime cuanto es la ponderacion de este/a {tipo}: ")
+                variable = True
+                while variable:
+                    try:
+                        ponderacion = float(ponderacion)
+                        variable = False
+                    except ValueError:
+                        ponderacion = input("Agregue una ponderacion valida valida: ")
+                evaluacion = Evaluacion(f'{tipo} {x + 1}', nota, ponderacion)
+                lista_evaluaciones.append(evaluacion)
+        return lista_evaluaciones
+            
+    def agregar_ramo(self):
+        nombre_ramo = input('Dime el nombre del ramo que quieres agregar: ')
+        if not self.ramo_existe(nombre_ramo):
+            n_evaluaciones = int(input('Dime cuantas pruebas quieres agregar: '))
+            lista_1 = self.agregar_evaluacion(n_evaluaciones, 'Prueba')
+            n_evaluaciones = int(input('Dime cuantos controles quieres agregar: '))
+            lista_2 = self.agregar_evaluacion(n_evaluaciones, 'Control')
+            evaluaciones = lista_1 + lista_2
+            ramo = Ramo(nombre_ramo, evaluaciones)
+            self.ramos.append(ramo)
+            Gestor_Archivo.guardar_datos(self.ramos)
+            print(f'{nombre_ramo} ha sido agregado')
+            return
+        print('Este ramo ya existe, pruebe modificando sus notas.')
+        
+    def imprimir_datos(self):
+        dash = '-' * 40
+        print(dash)
+        for ramo in self.ramos:
+            print(f"Ramo: {ramo.nombre.capitalize()}")
+            suma_ponderaciones_sin_nota = 0
+            for evaluacion in ramo.evaluaciones:
+                if (evaluacion.nota == 0):
+                    print(f"{evaluacion.tipo} - Nota: {evaluacion.nota}, Ponderacion: {evaluacion.ponderacion}")
+                    suma_ponderaciones_sin_nota = suma_ponderaciones_sin_nota + evaluacion.ponderacion
+                else:
+                    print(f"{evaluacion.tipo} - Nota: {evaluacion.nota}, Ponderacion: {evaluacion.ponderacion}")
+            print(' ') 
+            print(f'Promedio actual:  {self.promedio_actual_ramo(ramo)} / Nota necesaria: {self.calculo_de_nota_necesaria(ramo, suma_ponderaciones_sin_nota)}')
             print(dash)
-            print(" ")
-            print(f"El promedio ponderado de {ramo} es: {promedio:.2f}")
-            print(" ")
-            print(dash)
+
+    def calculo_de_nota_necesaria(self,nombre_ramo, suma_ponderaciones_sin_nota):
+        promedio_actual = self.promedio_actual_ramo(nombre_ramo)
+        if suma_ponderaciones_sin_nota == 0:
+            if 3.6 <= promedio_actual < 3.96:
+                return 'Te fuiste a examen'
+            elif promedio_actual < 3.6:
+                return 'NOOO HMRN TE ECHASTE EL RAMO'
+            return 'YA PASASTE EL RAMOOOO!!!'
+        return round((3.96 - promedio_actual) / suma_ponderaciones_sin_nota, 2)           
+    
+    def promedio_actual_ramo(self,ramo):
+        suma_promedios = 0
+        for evaluacion in ramo.evaluaciones:
+            suma_promedios += evaluacion.nota * evaluacion.ponderacion
+        return round(suma_promedios, 2)  
+    
+    def ver_notas_especifico(self):
+        nombre_ramo = input('Dime el ramo del que quieres ver las notas: ')
+        dash = '-' * 40
+        print(dash)
+        for ramo in self.ramos:
+            if ramo.nombre == nombre_ramo:
+                print(f"Ramo: {nombre_ramo.capitalize()}")
+                suma_ponderaciones_sin_nota = 0
+                for evaluacion in ramo.evaluaciones:
+                    if (evaluacion.nota == 0):
+                        print(f"{evaluacion.tipo} - Nota: {evaluacion.nota}, Ponderacion: {evaluacion.ponderacion}")
+                        suma_ponderaciones_sin_nota = suma_ponderaciones_sin_nota + evaluacion.ponderacion
+                    else:
+                        print(f"{evaluacion.tipo} - Nota: {evaluacion.nota}, Ponderacion: {evaluacion.ponderacion}")
+                print(' ') 
+                print(f'Promedio actual:  {self.promedio_actual_ramo(ramo)} / Nota necesaria: {self.calculo_de_nota_necesaria(ramo, suma_ponderaciones_sin_nota)}')
+                print(dash)
+        
+    def modificar_ramo(self):
+        nombre_ramo = input('Dime el ramo que quieres modificar: ')
+        dash = '-' * 40
+        if self.ramo_existe(nombre_ramo):
+            for ramo in self.ramos:
+                if ramo.nombre == nombre_ramo:
+                    print(dash)
+                    print(f'Notas actuales de {nombre_ramo}')
+                    print(" ")
+                    for idx, evaluacion in enumerate(ramo.evaluaciones):
+                        print(f'{idx + 1}. {evaluacion.tipo} - Nota: {evaluacion.nota}, Ponderacion: {evaluacion.ponderacion}')
+                    print(dash)
+                    print(" ")
+                    prueba_idx = int(input("Dime el número de la evaluacion que quieres modificar: ")) - 1
+                    if 0 <= prueba_idx <= len(ramo.evaluaciones):
+                        nueva_nota = float(input("Dime la nueva nota: "))
+                        nueva_ponderacion = float(input("Dime la nueva ponderación: "))
+                        ramo.evaluaciones[prueba_idx].nota = nueva_nota
+                        ramo.evaluaciones[prueba_idx].ponderacion = nueva_ponderacion
+                        Gestor_Archivo.guardar_datos(self.ramos)
+                        print(f'La evaluacion {evaluacion.tipo} de {nombre_ramo.capitalize()} ha sido modificada correctamente.')
+                    else:
+                        print('El nuemero ingresado es incorrecto.')
         else:
-            print("No hay ponderaciones válidas para calcular el promedio.")
-    else:
-        print("El ramo no existe.")
-# Agregar esta funcion para mostrar solo las notas de un ramo en especifico / momentaneamente no funciona
-
-def agregar_prueba(pruebas,ramo,data):
-    for x in range(pruebas):
-            print(f"\nAgregar prueba {x + 1}:")
-            nota = input("Dime la nota de esta prueba: ")
-            variable = True
-            while variable:
-                try:
-                    nota = float(nota)
-                    variable = False
-                except ValueError:
-                    nota = input("Agregue una nota valida: ")
-            ponderacion = input("Dime cuanto es la ponderacion de esta prueba: ")
-            variable = True
-            while variable:
-                try:
-                    ponderacion = float(ponderacion)
-                    variable = False
-                except ValueError:
-                    ponderacion = input("Agregue una ponderacion valida valida: ")
-            promedio = nota * ponderacion
-            evaluacion = {"tipo": "prueba", "nombre": f"Prueba {x + 1}", "nota": nota, "ponderacion": ponderacion, "promedio": promedio}
-            data[ramo].append(evaluacion)
-
-def agregar_controles(controles,ramo, data):
-    for y in range(controles):
-            print(f"\nAgregar control {y + 1}:")
-            nota = float(input("Dime la nota de este control: "))
-            ponderacion = float(input("Dime cuanto es la ponderacion de este control: "))
-            promedio = nota * ponderacion
-            evaluacion = {"tipo": "control", "nombre": f"Control {y + 1}", "nota": nota, "ponderacion": ponderacion, "promedio": promedio}
-            data[ramo].append(evaluacion)
-
-def promedio_actual_ramo(data,ramo):
-    suma_promedios = 0
-    for evaluacion in data[ramo]:
-        promedio_ramo =  evaluacion['promedio']
-        suma_promedios += promedio_ramo
-    return round(suma_promedios, 2)
-
-def calculo_de_nota_necesaria(data, ramo, suma_ponderaciones_sin_nota):
-    if suma_ponderaciones_sin_nota == 0:
-        return 'YA PASASTE EL RAMOOOO!!!'
-    return round((3.96 - (promedio_actual_ramo(data,ramo)))/suma_ponderaciones_sin_nota, 2)
-
-menu()
+            print(f'{nombre_ramo} no existe actulmente.')
+     
+    def eliminar_ramo(self):
+        nombre_ramo = input('Dime el ramo que quieres eliminar: ')
+        if self.ramo_existe(nombre_ramo):
+            for ramo in self.ramos:
+                if ramo.nombre == nombre_ramo:
+                    self.ramos.remove(ramo)
+                    Gestor_Archivo.guardar_datos(self.ramos)
+                    print(f"{nombre_ramo} ha sido eliminado.")
+        else:
+            print('Este ramo no existe actualmente.')
+            
+    def exportar_a_csv(self):
+        csv_filename = 'notas.csv'
+        with open(csv_filename, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(["Ramo", "Evaluacion", "Nota", "Ponderacion"])
+            for ramo in self.ramos:
+                for evaluacion in ramo.evaluaciones:
+                    writer.writerow([f'{ramo.nombre}', f'{evaluacion.tipo}', f'{evaluacion.nota}', f'{evaluacion.ponderacion}'])
+                writer.writerow([ ])
+        print(f"Datos exportados a {csv_filename}")             
+                  
+Menu.menu()
