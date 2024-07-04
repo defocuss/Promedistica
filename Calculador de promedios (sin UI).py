@@ -175,7 +175,8 @@ class Gestor_Evaluaciones:
                 return 'Te fuiste a examen'
             elif promedio_actual < 3.6:
                 return 'NOOO HMRN TE ECHASTE EL RAMO'
-            return 'YA PASASTE EL RAMOOOO!!!'
+            else:
+                return 'YA PASASTE EL RAMOOOO!!!'
         return round((3.96 - promedio_actual) / suma_ponderaciones_sin_nota, 2)           
     
     def promedio_actual_ramo(self,ramo):
