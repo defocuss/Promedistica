@@ -133,6 +133,7 @@ class Gestor_Evaluaciones:
         return lista_evaluaciones
             
     def agregar_ramo(self):
+        dash = '-' * 40
         nombre_ramo = input('Dime el nombre del ramo que quieres agregar: ')
         if not self.ramo_existe(nombre_ramo):
             n_evaluaciones = int(input('Dime cuantas pruebas quieres agregar: '))
@@ -143,9 +144,13 @@ class Gestor_Evaluaciones:
             ramo = Ramo(nombre_ramo, evaluaciones)
             self.ramos.append(ramo)
             Gestor_Archivo.guardar_datos(self.ramos)
+            print(dash)
             print(f'{nombre_ramo} ha sido agregado')
+            print(dash)
             return
+        print(dash)
         print('Este ramo ya existe, pruebe modificando sus notas.')
+        print(dash)
         
     def imprimir_datos(self):
         dash = '-' * 40
@@ -182,20 +187,25 @@ class Gestor_Evaluaciones:
     def ver_notas_especifico(self):
         nombre_ramo = input('Dime el ramo del que quieres ver las notas: ')
         dash = '-' * 40
-        print(dash)
-        for ramo in self.ramos:
-            if ramo.nombre == nombre_ramo:
-                print(f"Ramo: {nombre_ramo.capitalize()}")
-                suma_ponderaciones_sin_nota = 0
-                for evaluacion in ramo.evaluaciones:
-                    if (evaluacion.nota == 0):
-                        print(f"{evaluacion.tipo} - Nota: {evaluacion.nota}, Ponderacion: {evaluacion.ponderacion}")
-                        suma_ponderaciones_sin_nota = suma_ponderaciones_sin_nota + evaluacion.ponderacion
-                    else:
-                        print(f"{evaluacion.tipo} - Nota: {evaluacion.nota}, Ponderacion: {evaluacion.ponderacion}")
-                print(' ') 
-                print(f'Promedio actual:  {self.promedio_actual_ramo(ramo)} / Nota necesaria: {self.calculo_de_nota_necesaria(ramo, suma_ponderaciones_sin_nota)}')
-                print(dash)
+        if self.ramo_existe(nombre_ramo):
+            print(dash)
+            for ramo in self.ramos:
+                if ramo.nombre == nombre_ramo:
+                    print(f"Ramo: {nombre_ramo.capitalize()}")
+                    suma_ponderaciones_sin_nota = 0
+                    for evaluacion in ramo.evaluaciones:
+                        if (evaluacion.nota == 0):
+                            print(f"{evaluacion.tipo} - Nota: {evaluacion.nota}, Ponderacion: {evaluacion.ponderacion}")
+                            suma_ponderaciones_sin_nota = suma_ponderaciones_sin_nota + evaluacion.ponderacion
+                        else:
+                            print(f"{evaluacion.tipo} - Nota: {evaluacion.nota}, Ponderacion: {evaluacion.ponderacion}")
+                    print(' ') 
+                    print(f'Promedio actual:  {self.promedio_actual_ramo(ramo)} / Nota necesaria: {self.calculo_de_nota_necesaria(ramo, suma_ponderaciones_sin_nota)}')
+                    print(dash)
+        else:
+            print(dash)
+            print('Este ramo no existe. Pruebe agregandolo primero.')
+            print(dash)
         
     def modificar_ramo(self):
         nombre_ramo = input('Dime el ramo que quieres modificar: ')
@@ -221,7 +231,7 @@ class Gestor_Evaluaciones:
                     else:
                         print('El nuemero ingresado es incorrecto.')
         else:
-            print(f'{nombre_ramo} no existe actulmente.')
+            print(f'{nombre_ramo} no existe actulmente. Pruebe agregandolo primero')
      
     def eliminar_ramo(self):
         nombre_ramo = input('Dime el ramo que quieres eliminar: ')
